@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Evaluación</title>
+    <script>
+    const msgs = [];
+        var socket = new WebSocket("ws://localhost:8080/ws");
+
+        socket.onopen = function(event) {
+            msgs.forEach((element) =>  addMessageToChat(element));
+        };
+
+        socket.onmessage = function(event) {
+        	var usr = document.getElementById("email").value;
+            var message = event.data;
+            var ret=usr+" "+message
+            addMessageToChat(ret);
+            document.getElementById("messageInput").value="";
+            document.getElementById("email").value="";
+            const msgs = [].push(ret);
+        };
+
+        function sendMessage() {
+        	 var email = document.getElementById("email").value;
+            var message = document.getElementById("messageInput").value;
+            addMessageToChat(email+" se conecto");
+            socket.send(message);
+            const msgs = [].push(message);
+        }
+
+        function addMessageToChat(message) {
+            var newMessage = document.createElement("p");
+            newMessage.textContent = message;
+
+            document.getElementById("messages").appendChild(newMessage);
+
+            document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+        }
+    </script>
+</head>
+<body>
+    <h1 th:text="${message}"></h1>
+    
+    <div>
+    <input type="text" id="email" />
+        <input type="text" id="messageInput" />
+        
+        <button onclick="sendMessage()">Log In</button>
+    </div>
+    
+    <div>
+        <h3>Mensajes:</h3>
+        <div id="messages" style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+        </div>
+    </div>
+</body>
+</html>
