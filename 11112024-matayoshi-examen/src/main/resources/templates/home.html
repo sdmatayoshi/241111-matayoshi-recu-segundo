@@ -7,25 +7,23 @@
         var socket = new WebSocket("ws://localhost:8080/ws");
 
         socket.onopen = function(event) {
-            msgs.forEach((element) =>  addMessageToChat(element));
+        	msgs.forEach((element) =>  addMessageToChat(element));
         };
 
         socket.onmessage = function(event) {
         	var usr = document.getElementById("email").value;
             var message = event.data;
-            var ret=usr+" "+message
-            addMessageToChat(ret);
+            addMessageToChat(message);
             document.getElementById("messageInput").value="";
             document.getElementById("email").value="";
-            const msgs = [].push(ret);
         };
 
         function sendMessage() {
-        	 var email = document.getElementById("email").value;
-            var message = document.getElementById("messageInput").value;
+        	var email = document.getElementById("email").value;
+            var password = document.getElementById("messageInput").value;
+            var message = email+":"+password
             addMessageToChat(email+" se conecto");
             socket.send(message);
-            const msgs = [].push(message);
         }
 
         function addMessageToChat(message) {
